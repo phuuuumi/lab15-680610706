@@ -32,6 +32,7 @@ export function RegisterDialog() {
 
 
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    alert(courseId);
     e.preventDefault(); // ไม่ให้หน้าเว็บ reload
     setCourseId(""); // เคลียร์ฟอร์ม
     setOpen(false); // ปิด Dialog

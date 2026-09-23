@@ -7,11 +7,17 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+
+import { Badge } from "./ui/badge";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { currentStudent, currentUser } from "@/lib/mock-data";
 
 const items = [
   { title: "หน้าแรก", url: "/", icon: Home },
@@ -49,6 +55,18 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <div className="border-t px-2 py-3 text-xs text-muted-foreground flex gap-4 items-center">
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="font-medium text-foreground font-semibold text-base">{currentUser.nickname}</p>
+            <Badge variant="outline">{currentUser.role}</Badge>
+          </div>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }

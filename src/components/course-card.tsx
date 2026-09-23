@@ -52,14 +52,14 @@ export function CourseCard({ course, student }: CourseCardProps) {
                   minute: "2-digit",
                   hour12: false,
                 })
-              : "ไม่ระบุ"}
+              : null}
           </p>
         </div>
         <Button variant="ghost" >
           <Trash2 className="text-destructive" size="icon" />
         </Button>
       </CardContent>
-      : ""  
+      : null
     }
     </Card>
   );

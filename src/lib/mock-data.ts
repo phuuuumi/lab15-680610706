@@ -49,7 +49,7 @@ export const enrollments: Enrollment[] = [
     enrolledAt: "2026-09-13T14:15:00",
   },
   {
-    studentId: "650610001",
+    studentId: "650610002",
     courseId: "261497",
     enrolledAt: "2026-09-14T09:30:00",
   },
