@@ -17,11 +17,32 @@ type CourseCardProps = {
   course: Course;
   student: Student;
   enrolledAt?: string;
+  onRemoved?: () => void;
 };
+
+// import icon
 import { Trash2 } from "lucide-react";
 
-export function CourseCard({ course, student }: CourseCardProps) {
+export function CourseCard({ course, student, onRemoved }: CourseCardProps) {
   const isEnrolled = enrollments.find((e) => e.studentId === student.studentId && course.courseId === e.courseId);
+
+  function handleRemove() {
+    const enrollmentIndex = enrollments.findIndex(
+      (enrollment) =>
+        enrollment.studentId === student.studentId &&
+        enrollment.courseId === course.courseId,
+    );
+
+    if (enrollmentIndex === -1) {
+      return;
+    }
+
+    enrollments.splice(enrollmentIndex, 1);
+    student.courses = (student.courses ?? []).filter(
+      (courseId) => courseId !== course.courseId,
+    );
+    onRemoved?.();
+  }
 
   return (
     <Card>
@@ -55,7 +76,12 @@ export function CourseCard({ course, student }: CourseCardProps) {
               : null}
           </p>
         </div>
-        <Button variant="ghost" >
+        <Button
+          type="button"
+          variant="ghost"
+          aria-label={`ยกเลิกการลงทะเบียน ${course.courseTitle}`}
+          onClick={handleRemove}
+        >
           <Trash2 className="text-destructive" size="icon" />
         </Button>
       </CardContent>

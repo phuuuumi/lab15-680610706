@@ -20,26 +20,70 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+// import icon
 import { UserPlus } from 'lucide-react';
-
 
 // import data
 import { courses, currentStudent, enrollments } from "@/lib/mock-data";
 
-export function RegisterDialog() {
+type RegisterDialogProps = {
+  onRegistered?: () => void;
+};
+
+export function RegisterDialog({ onRegistered }: RegisterDialogProps) {
   const [open, setOpen] = useState(false); // true = แสดง Dialog
   const [courseId, setCourseId] = useState("");
+  const [formKey, setFormKey] = useState(0);
+  const [enrolledAt, setEnrolledAt] = useState(
+    new Date().toTimeString().slice(0, 5),
+  );
 
+  function resetForm() {
+    setCourseId("");
+    setEnrolledAt(new Date().toTimeString().slice(0, 5));
+    setFormKey((key) => key + 1);
+  }
 
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-    alert(courseId);
     e.preventDefault(); // ไม่ให้หน้าเว็บ reload
-    setCourseId(""); // เคลียร์ฟอร์ม
+
+    const selectedCourseId = courseId.split(" - ")[0];
+    if (!selectedCourseId || enrollments.some(
+      (enrollment) =>
+        enrollment.studentId === currentStudent.studentId &&
+        enrollment.courseId === selectedCourseId,
+    )) {
+      return;
+    }
+
+    const enrollmentDate = new Date();
+    const [hours, minutes] = enrolledAt.split(":").map(Number);
+    enrollmentDate.setHours(hours, minutes, 0, 0);
+    enrollments.push({
+      studentId: currentStudent.studentId,
+      courseId: selectedCourseId,
+      enrolledAt: enrollmentDate.toISOString(),
+    });
+    currentStudent.courses = [
+      ...(currentStudent.courses ?? []),
+      selectedCourseId,
+    ];
+
+    resetForm();
     setOpen(false); // ปิด Dialog
+    onRegistered?.();
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+        if (!nextOpen) {
+          resetForm();
+        }
+      }}
+    >
       {/* ปุ่มที่กดแล้วเปิด Dialog */}
       <DialogTrigger>
         <Button>
@@ -50,7 +94,7 @@ export function RegisterDialog() {
 
       {/* ฟอร์มที่แสดงออกมาเมื่อกดปุ่ม */}
       <DialogContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form key={formKey} onSubmit={handleSubmit} className="space-y-4">
           <DialogHeader>
             <DialogTitle>ลงทะเบียนรายวิชา</DialogTitle>
             <DialogDescription>กรอกข้อมูลเพื่อลงทะเบียน</DialogDescription>
@@ -88,7 +132,8 @@ export function RegisterDialog() {
               <Input
                 id="time-input"
                 type="time"
-                defaultValue={new Date().toTimeString().slice(0, 5)}
+                value={enrolledAt}
+                onChange={(event) => setEnrolledAt(event.target.value)}
               />
           </div>
 

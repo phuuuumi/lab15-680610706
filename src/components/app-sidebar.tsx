@@ -17,7 +17,7 @@ import {
 import { Badge } from "./ui/badge";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { currentStudent, currentUser } from "@/lib/mock-data";
+import { currentUser } from "@/lib/mock-data";
 
 const items = [
   { title: "หน้าแรก", url: "/", icon: Home },
@@ -58,7 +58,7 @@ export function AppSidebar() {
       <SidebarFooter>
         <div className="border-t px-2 py-3 text-xs text-muted-foreground flex gap-4 items-center">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage src="/profile.png" alt={currentUser.nickname} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div>
